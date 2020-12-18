@@ -1,8 +1,8 @@
 version: "2.1"
 jobs:
   build:
-    docker:
-      - image: fpco/stack-build:lts
+    macos:
+      xcode: 9.4.1
     steps:
       - checkout
       - restore_cache:
