@@ -45,6 +45,7 @@ jobs:
           chown -R $ME:staff ${ROOT}
           sed -e "s/PANDOCVERSION/${VERSION}/" macos/distribution.xml.in > ${ARTIFACTS}/distribution.xml
           cp macos/Makefile ${ARTIFACTS}/
+          zip -r macos-release-candidate.zip ${ARTIFACTS}
 
     - save_cache:
         name: Cache Dependencies
@@ -56,8 +57,8 @@ jobs:
 
     - store_artifacts:
         # https://circleci.com/docs/2.0/artifacts/
-        path: macos-release-candidate/
-        destination: macos-release-candidate
+        path: macos-release-candidate.zip
+        destination: macos-release-candidate.zip
 
 workflows:
   version: 2
