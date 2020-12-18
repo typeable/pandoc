@@ -11,6 +11,9 @@ jobs:
         keys:
           - cci-demo-haskell-v1-{{ checksum "stack.yaml" }}
     - run:
+        name: Install stack
+        command: brew install haskell-stack
+    - run:
         name: Resolve/Update Dependencies
         command: stack --no-terminal setup
     - run:
