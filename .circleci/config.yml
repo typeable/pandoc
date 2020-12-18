@@ -27,16 +27,39 @@ jobs:
     - run:
         name: Install executable
         command: stack --no-terminal install
+    - run:
+        name: Create artifacts
+        command: |
+          export VERSION=$(grep '^[Vv]ersion:' pandoc.cabal | awk '{print $$2;}')
+          export ARTIFACTS=macos-release-candidate
+          export RESOURCES=${ARTIFACTS}/Resources
+          export ROOT=${ARTIFACTS}/pandoc
+          export DEST=${ROOT}/usr/local
+          export ME=$(whoami)
+          export BASE=pandoc-$VERSION
+          mkdir -p ${ARTIFACTS}
+          mkdir -p ${RESOURCES}
+          mkdir -p ${DEST}/bin
+          mkdir -p ${DEST}/share/man/man1
+          cp ~/.local/bin/pandoc ${DEST}/bin/
+          strip ${DEST}/bin/pandoc
+          cp man/pandoc.1 ${DEST}/share/man/man1/pandoc.1
+          ~/.local/bin/pandoc -s COPYING.md -Vpagetitle=License -o ${RESOURCES}/license.html
+          chown -R $ME:staff ${ROOT}
+          sed -e "s/PANDOCVERSION/${VERSION}/" macos/distribution.xml.in > ${ARTIFACTS}/distribution.xml
+          cp macos/Makefile ${ARTIFACTS}/
+
     - save_cache:
         name: Cache Dependencies
         key: cci-demo-haskell-v1-{{ checksum "stack.yaml" }}
         paths:
         - "/root/.stack"
         - ".stack-work"
+
     - store_artifacts:
         # https://circleci.com/docs/2.0/artifacts/
-        path: ~/.local/bin/pandoc
-        destination: pandoc
+        path: macos-release-candidate/
+        destination: macos-release-candidate
 
 workflows:
   version: 2
