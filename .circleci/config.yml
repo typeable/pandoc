@@ -2,7 +2,7 @@ version: "2.1"
 jobs:
   build:
     macos:
-      xcode: 9.4.1
+      xcode: 10.1.0
     steps:
     - checkout
     - restore_cache:
