@@ -1,41 +1,42 @@
 version: "2.1"
 jobs:
-  macos:
-    xcode: 9.4.1
-  steps:
-  - checkout
-  - restore_cache:
-      # See https://circleci.com/docs/2.0/caching/
-      name: Restore Cached Dependencies
-      keys:
-        - cci-demo-haskell-v1-{{ checksum "stack.yaml" }}
-  - run:
-      name: Resolve/Update Dependencies
-      command: stack --no-terminal setup
-  - run:
-      name: Run tests
-      command: stack --no-terminal test
-  - run:
-      name: Install executable
-      command: stack --no-terminal install
-  - save_cache:
-      name: Cache Dependencies
-      key: cci-demo-haskell-v1-{{ checksum "stack.yaml" }}
-      paths:
-      - "/root/.stack"
-      - ".stack-work"
-  - store_artifacts:
-      # https://circleci.com/docs/2.0/artifacts/
-      path: ~/.local/bin/pandoc
-      destination: pandoc
+  build:
+    macos:
+      xcode: 9.4.1
+    steps:
+    - checkout
+    - restore_cache:
+        # See https://circleci.com/docs/2.0/caching/
+        name: Restore Cached Dependencies
+        keys:
+          - cci-demo-haskell-v1-{{ checksum "stack.yaml" }}
+    - run:
+        name: Resolve/Update Dependencies
+        command: stack --no-terminal setup
+    - run:
+        name: Run tests
+        command: stack --no-terminal test
+    - run:
+        name: Install executable
+        command: stack --no-terminal install
+    - save_cache:
+        name: Cache Dependencies
+        key: cci-demo-haskell-v1-{{ checksum "stack.yaml" }}
+        paths:
+        - "/root/.stack"
+        - ".stack-work"
+    - store_artifacts:
+        # https://circleci.com/docs/2.0/artifacts/
+        path: ~/.local/bin/pandoc
+        destination: pandoc
 
-  workflows:
-    version: 2
-    release:
-      jobs:
-      - build:
-          filters:
-            branches:
-              only:
-              - /rc\/.*/
+workflows:
+  version: 2
+  release:
+    jobs:
+    - build:
+        filters:
+          branches:
+            only:
+            - /rc\/.*/
 
