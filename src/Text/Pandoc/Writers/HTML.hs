@@ -26,7 +26,9 @@ module Text.Pandoc.Writers.HTML (
   writeSlideous,
   writeDZSlides,
   writeRevealJs,
-  tagWithAttributes
+  tagWithAttributes,
+  inlineToHtml,
+  blockToHtml
   ) where
 import Control.Monad.State.Strict
 import Data.Char (ord)
