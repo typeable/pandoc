@@ -28,8 +28,11 @@ module Text.Pandoc.Writers.HTML (
   writeRevealJs,
   tagWithAttributes,
   inlineToHtml,
-  blockToHtml
+  blockToHtml,
+  WriterState(..),
+  defaultWriterState
   ) where
+
 import Control.Monad.State.Strict
 import Data.Char (ord)
 import Data.List (intercalate, intersperse, partition, delete, (\\), foldl')
